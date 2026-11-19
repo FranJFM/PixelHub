@@ -1,17 +1,23 @@
 package com.example.versin11proyecto.pantalla1
 
+
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -27,27 +33,27 @@ import androidx.compose.ui.unit.dp
 import com.example.versin11proyecto.componentes.BarraInferior
 import com.example.versin11proyecto.modelo.Juego
 
+
 @Composable
-fun explorarPantalla(modifier: Modifier = Modifier){
+fun PantallaPrincipal(
+    juegos: List<Juego>,                // Lista de juegos
+    onJuegoClick: (Int) -> Unit,        // Función para manejar el clic en un juego
+    onAgregar: () -> Unit,                 // Función para manejar el clic en el botón de agregar
+    modifier: Modifier = Modifier
+) {
     var textoBusqueda by remember { mutableStateOf("") }
 
-    val juegos = listOf(
-        Juego("Hollow Knight", "19/02/2017", "Terminado"),
-        Juego("The Last Of Us", "19/06/2013", "Terminado"),
-        Juego("Unreturning","11/03/2027","Pendiente")
-    )
-
-    val juegosFiltrados = juegos.filter {juego ->
-        juego.titulo.contains(textoBusqueda,ignoreCase = true)
+    val juegosFiltrados = juegos.filter { juego ->
+        juego.titulo.contains(textoBusqueda, ignoreCase = true)
     }
 
     Box(
-        modifier = modifier
-            .fillMaxSize()
+        modifier = modifier.fillMaxSize()
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .statusBarsPadding()
                 .padding(16.dp)
         ) {
             Row(
@@ -56,7 +62,7 @@ fun explorarPantalla(modifier: Modifier = Modifier){
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    "Game Library",
+                    "PixelHub",
                     style = MaterialTheme.typography.titleLarge
                 )
                 TextButton(onClick = {}) {
@@ -80,17 +86,51 @@ fun explorarPantalla(modifier: Modifier = Modifier){
                     Text("Buscar")
                 }
             }
+
+            Text(
+                "Mis juegos",
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(top = 16.dp)
+            )
+
+            if (juegosFiltrados.isEmpty()) {
+                Text(
+                    "No hay juegos que mostrar",
+                    modifier = Modifier.padding(top = 16.dp)
+                )
+            }
+
             LazyColumn(
                 modifier = Modifier.padding(top = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                // Espacio al final para que la barra y el botón no tapen el último juego
+                contentPadding = PaddingValues(bottom = 180.dp)
             ) {
-                items(juegosFiltrados) { juego ->
-                    tarjetaJuego(juego)
+                items(juegosFiltrados, key = { it.id }) { juego ->
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onJuegoClick(juego.id) }
+                    ) {
+                        tarjetaJuego(juego)
+                    }
                 }
             }
         }
+
+        FloatingActionButton(       //Botón flotante para agregar un juego
+            onClick = onAgregar,
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .navigationBarsPadding()
+                .padding(end = 16.dp, bottom = 96.dp)
+        ) {
+            Text("➕")
+        }
+
         Box(modifier = Modifier.align(Alignment.BottomCenter)) {
             BarraInferior()
         }
     }
 }
+

@@ -44,6 +44,10 @@ fun tarjetaJuego(juego: Juego){
                     fontWeight = FontWeight.Bold
                 )
                 Text(
+                    "Creador: ${juego.creador}",
+                    style = MaterialTheme.typography.bodySmall
+                )
+                Text(
                     "Lanzamiento: ${juego.fechaLanzamiento}",
                     style = MaterialTheme.typography.bodySmall
                 )
