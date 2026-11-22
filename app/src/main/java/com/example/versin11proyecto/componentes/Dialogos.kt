@@ -24,11 +24,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import com.example.versin11proyecto.modelo.Juego
+import com.example.versin11proyecto.ui.theme.colorDeEstado
 
 
 private val ESTADOS = listOf("Pendiente", "Jugando", "Terminado")
 
-// Comprueba el formato dd/mm/aaaa
 private fun fechaValida(texto: String): Boolean {
     val partes = texto.split("/")           //buscada en internet
     if (partes.size != 3) return false
@@ -39,11 +39,6 @@ private fun fechaValida(texto: String): Boolean {
 }
 
 
-/**
- * Un único diálogo para crear y editar.
- * - Crear: juegoInicial = null (campos vacíos).
- * - Editar: juegoInicial = el juego (campos rellenos).
- */
 @Composable
 fun DialogoJuego(
     titulo: String,
@@ -57,12 +52,11 @@ fun DialogoJuego(
     var estado by remember { mutableStateOf(juegoInicial?.estado ?: ESTADOS[0]) }
 
 
-    // Los errores solo se enseñan después de pulsar Guardar
     var intentoGuardar by remember { mutableStateOf(false) }
 
     val errorNombre = if (nombre.isBlank()) "El título es obligatorio" else null
     val errorFecha = when {
-        fecha.isBlank() -> "La fecha es obligatoria"            //buscado en internet
+        fecha.isBlank() -> "La fecha es obligatoria"
         !fechaValida(fecha.trim()) -> "Usa el formato dd/mm/aaaa"
         else -> null
     }
@@ -118,7 +112,7 @@ fun DialogoJuego(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         RadioButton(selected = estado == opcion, onClick = null)
-                        Text(opcion, modifier = Modifier.padding(start = 8.dp))
+                        Text(opcion,color = colorDeEstado(opcion), modifier = Modifier.padding(start = 8.dp))
                     }
                 }
             }
@@ -126,7 +120,6 @@ fun DialogoJuego(
         confirmButton = {
             TextButton(onClick = {
                 intentoGuardar = true
-                // Solo guardamos si no hay ningún error
                 if (errorNombre == null && errorFecha == null) {
                     onGuardar(nombre.trim(),creador.trim() ,fecha.trim(), estado)
                 }
@@ -134,7 +127,7 @@ fun DialogoJuego(
                 Text("Guardar")
             }
         },
-        dismissButton = { // Botón para cancelar
+        dismissButton = {
             TextButton(onClick = onCancelar) {
                 Text("Cancelar")
             }
@@ -142,7 +135,6 @@ fun DialogoJuego(
     )
 }
 
-/** Diálogo de confirmación antes de eliminar. */
 @Composable
 fun DialogoBorrar(
     nombreJuego: String,

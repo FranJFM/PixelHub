@@ -19,10 +19,8 @@ import com.example.versin11proyecto.pantalla2.PantallaDetalle
 
 @Composable
 fun AppPantallas() {
-    // Repositorio en memoria: aquí viven los datos
     val repositorio = remember { JuegoRepository() }
 
-    // El NavController gestiona la pila de pantallas y el botón Atrás
     val navController = rememberNavController()
 
     NavHost(
@@ -30,7 +28,6 @@ fun AppPantallas() {
         startDestination = "lista"
     ) {
 
-        // ---------- Pantalla 1: lista ----------
         composable("lista") {
             var mostrarCrear by remember { mutableStateOf(false) }
 
@@ -40,7 +37,6 @@ fun AppPantallas() {
                 onAgregar = { mostrarCrear = true }
             )
 
-            // Diálogo de creación
             if (mostrarCrear) {
                 DialogoJuego(
                     titulo = "Añadir juego",
@@ -54,7 +50,6 @@ fun AppPantallas() {
             }
         }
 
-        // ---------- Pantalla 2: detalle (recibe el id en la ruta) ----------
         composable(
             route = "detalle/{id}",
             arguments = listOf(navArgument("id") { type = NavType.IntType })
@@ -66,9 +61,6 @@ fun AppPantallas() {
             var mostrarBorrar by remember { mutableStateOf(false) }
 
             if (juego == null) {
-                // Si el juego ya no existe (p. ej. tras girar el móvil y reiniciarse
-                // el repositorio), volvemos a la lista. La comprobación evita cerrar
-                // la pila cuando ya estamos en la lista.
                 LaunchedEffect(Unit) {
                     if (navController.previousBackStackEntry != null) {
                         navController.popBackStack()
@@ -82,7 +74,6 @@ fun AppPantallas() {
                     onBorrar = { mostrarBorrar = true }
                 )
 
-                // Diálogo de edición
                 if (mostrarEditar) {
                     DialogoJuego(
                         titulo = "Editar juego",
@@ -102,14 +93,13 @@ fun AppPantallas() {
                     )
                 }
 
-                // Diálogo de confirmación de borrado
                 if (mostrarBorrar) {
                     DialogoBorrar(
                         nombreJuego = juego.titulo,
                         onConfirmar = {
                             mostrarBorrar = false
-                            navController.popBackStack()      // vuelve a la lista
-                            repositorio.eliminar(juego.id)    // y se elimina el juego
+                            navController.popBackStack()
+                            repositorio.eliminar(juego.id)
                         },
                         onCancelar = { mostrarBorrar = false }
                     )

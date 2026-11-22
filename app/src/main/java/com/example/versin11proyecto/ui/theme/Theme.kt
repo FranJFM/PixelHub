@@ -1,58 +1,61 @@
 package com.example.versin11proyecto.ui.theme
 
-import android.app.Activity
-import android.os.Build
-import androidx.compose.foundation.isSystemInDarkTheme
+
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
-)
 
-private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
+private val EsquemaPixel = darkColorScheme(
+    primary = CianNeon,
+    onPrimary = Color(0xFF00363D),
+    primaryContainer = Color(0xFF004F58),
+    onPrimaryContainer = Color(0xFFB8F5FF),
 
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    secondary = MagentaNeon,
+    onSecondary = Color(0xFF3A0030),
+    secondaryContainer = Color(0xFF5A1D4D),
+    onSecondaryContainer = Color(0xFFFFD6F4),
+
+    tertiary = OroEstrella,
+    onTertiary = Color(0xFF3B2F00),
+
+    background = FondoPixel,
+    onBackground = TextoPrincipal,
+    surface = FondoPixel,
+    onSurface = TextoPrincipal,
+    surfaceVariant = TarjetaPixel,
+    onSurfaceVariant = TextoSecundario,
+
+    surfaceContainerLowest = FondoPixel,
+    surfaceContainerLow = Color(0xFF150F2B),
+    surfaceContainer = SuperficiePixel,
+    surfaceContainerHigh = Color(0xFF211A40),
+    surfaceContainerHighest = TarjetaPixel,
+
+    outline = BordePixel,
+    outlineVariant = Color(0xFF3A3170),
+
+    error = ErrorPixel,
+    onError = Color(0xFF3A0010)
 )
 
 @Composable
 fun Versión11ProyectoTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
-    }
-
     MaterialTheme(
-        colorScheme = colorScheme,
-        typography = Typography,
-        content = content
-    )
+        colorScheme = EsquemaPixel,
+        typography = Typography
+    ) {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background,
+            content = content
+        )
+    }
 }

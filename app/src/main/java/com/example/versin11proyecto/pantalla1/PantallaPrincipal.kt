@@ -1,6 +1,7 @@
 package com.example.versin11proyecto.pantalla1
 
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,16 +30,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.versin11proyecto.componentes.BarraInferior
 import com.example.versin11proyecto.modelo.Juego
+import com.example.versin11proyecto.ui.theme.FondoPixel
 
 
 @Composable
 fun PantallaPrincipal(
-    juegos: List<Juego>,                // Lista de juegos
-    onJuegoClick: (Int) -> Unit,        // Función para manejar el clic en un juego
-    onAgregar: () -> Unit,                 // Función para manejar el clic en el botón de agregar
+    juegos: List<Juego>,
+    onJuegoClick: (Int) -> Unit,
+    onAgregar: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     var textoBusqueda by remember { mutableStateOf("") }
@@ -48,7 +52,13 @@ fun PantallaPrincipal(
     }
 
     Box(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier
+            .fillMaxSize()
+            .background(
+                Brush.verticalGradient(
+                    listOf(Color(0xFF1E1650), FondoPixel)
+                )
+            )
     ) {
         Column(
             modifier = Modifier
@@ -103,7 +113,6 @@ fun PantallaPrincipal(
             LazyColumn(
                 modifier = Modifier.padding(top = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
-                // Espacio al final para que la barra y el botón no tapen el último juego
                 contentPadding = PaddingValues(bottom = 180.dp)
             ) {
                 items(juegosFiltrados, key = { it.id }) { juego ->
@@ -118,8 +127,10 @@ fun PantallaPrincipal(
             }
         }
 
-        FloatingActionButton(       //Botón flotante para agregar un juego
+        FloatingActionButton(
             onClick = onAgregar,
+            containerColor = MaterialTheme.colorScheme.secondary,
+            contentColor = MaterialTheme.colorScheme.onSecondary,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .navigationBarsPadding()
